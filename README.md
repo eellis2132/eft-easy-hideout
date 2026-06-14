@@ -1,37 +1,62 @@
 # Easy Hideout
 
-A hideout upgrade tracker for Escape from Tarkov.
+A hideout upgrade planner and tracker for Escape from Tarkov.
 
-Easy Hideout pulls station data from [tarkov.dev](https://tarkov.dev) and helps you plan your hideout progression — tracking what items you need, what you can afford, and what to focus on first.
+> **Easy Hideout does not interact with the game, modify any game files, or read any game data.**
+> It is a standalone desktop app. All game data (station requirements, item lists, prices) is pulled
+> from the public [tarkov.dev](https://tarkov.dev) API. Your progress is tracked manually by you.
+
+---
+
+## What it does
+
+Easy Hideout lets you plan your hideout progression without tabbing out to spreadsheets or wikis.
+You tell it your current station levels and what items you have — it figures out what to build next,
+what to buy, and what to focus on.
 
 ## Features
 
-- **Wishlist** — All items needed across your upcoming upgrades, with quantity tracking
-- **Priority Lists** — Auto-ranked focus items by cross-station impact, plus L+1 readiness per station
-- **Active Nodes** — Visual map of your hideout with blocking dependencies shown
-- **Shopping** — Flea market shopping list sorted by cost, with price drop indicators
+- **Wishlist** — Every item needed across your upcoming upgrades in one list, with quantity tracking you update manually
+- **Priority Lists** — Auto-ranks items by cross-station impact so you know what to farm first; also shows which L+1 upgrades you're closest to completing
+- **Active Nodes** — Visual overview of your hideout showing what's unlocked, what's blocked, and why
+- **Shopping** — Flea market shopping list for items you still need, sorted by cost, with price drop indicators after a refresh
 - **Item Pool** — Aggregate view of everything needed across all unfinished upgrades
 - **Settings** — Profile management, auto-refresh, and manual data sync
 
 ## Download
 
-Grab the latest release from the [Releases](../../releases) page. Single `.exe`, no installer needed.
+Grab the latest release from the [Releases](../../releases) page. Single `.exe`, no installer needed — just download and run.
 
 ## Requirements
 
 - Windows 10 or later
-- Internet connection (for pulling data from tarkov.dev)
+- Internet connection (used only to fetch data from tarkov.dev)
 
-## Usage
+## First-time setup
 
-1. Download `EasyHideout.exe` from Releases
-2. Run it — no install required, data is stored in `%AppData%\EasyHideout`
-3. Go to **Settings → Pull Hideout Data** on first launch
-4. Create a profile with your PMC level and edition
-5. Start tracking
+1. Download `EasyHideout.exe` from the Releases page
+2. Run it — no installation required. App data is stored in `%AppData%\EasyHideout`
+3. Go to **Settings → Pull Hideout Data**
+   - This downloads station structure, level requirements, and item data from [tarkov.dev](https://tarkov.dev)
+   - It does **not** pull your in-game hideout — EFT does not expose that data externally
+   - You set your own station levels and item counts manually inside the app
+4. Create a profile with your PMC level and game edition
+5. Set your current station levels in the **Active Nodes** tab
+6. Start tracking
 
-## Notes
+## Updating prices
 
-- All data comes from the public [tarkov.dev](https://tarkov.dev) API — no account or API key required
-- Your progress is stored locally in a SQLite database in `%AppData%\EasyHideout`
-- Prices can be refreshed independently of the full data sync via **Settings → Refresh Prices**
+Flea market prices shift constantly. Use **Settings → Refresh Prices** to pull the latest
+`avg24hPrice` values from tarkov.dev without doing a full data sync. Price drops of 15% or
+more are flagged with a green badge on the Shopping and Wishlist tabs.
+
+## Privacy & safety
+
+- No account, login, or API key required
+- The app makes outbound requests only to `api.tarkov.dev/graphql` (public API, no authentication)
+- All your progress data is stored locally at `%AppData%\EasyHideout\easyhideout.db` (SQLite)
+- Nothing is sent anywhere — your data never leaves your machine
+
+## License
+
+[CC BY-NC 4.0](LICENSE) — free to use and share, not for commercial use.

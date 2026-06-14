@@ -131,8 +131,6 @@ public class ItemPoolViewModel : INotifyPropertyChanged
     {
         _allRows.Clear();
         Items.Clear();
-        _searchText = "";
-        OnPropertyChanged(nameof(SearchText));
 
         using var db = ServiceLocator.Get<AppDbContext>();
         var settings = db.AppSettings.FirstOrDefault(s => s.Id == 1);
@@ -205,8 +203,6 @@ public class ItemPoolViewModel : INotifyPropertyChanged
         }
 
         IsEmpty = false;
-        _sortColumn = "Name";
-        _sortDescending = false;
         NotifySortIndicators();
         ApplyFilterAndSort();
     }

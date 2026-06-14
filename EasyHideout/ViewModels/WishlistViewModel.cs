@@ -119,8 +119,6 @@ public class WishlistViewModel : INotifyPropertyChanged
     {
         _allRows.Clear();
         Items.Clear();
-        _searchText = "";
-        OnPropertyChanged(nameof(SearchText));
 
         using var db = ServiceLocator.Get<AppDbContext>();
         var settings = db.AppSettings.FirstOrDefault(s => s.Id == 1);

@@ -6,16 +6,28 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+    <AssemblyTitle>Easy Hideout</AssemblyTitle>
+    <Description>EFT Hideout Tracker</Description>
+    <Product>Easy Hideout</Product>
+    <Company>stahhh</Company>
+    <Version>1.0.0</Version>
+    <FileVersion>1.0.0.0</FileVersion>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
   </PropertyGroup>
 
-  <!-- DEV builds go to ..\DEV\, RELEASE builds go to ..\LIVE\ -->
+  <!-- DEV debug builds go to ..\DEV\ -->
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <OutputPath>..\DEV\</OutputPath>
     <DefineConstants>$(DefineConstants);DEVBUILD</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <OutputPath>..\LIVE\</OutputPath>
-  </PropertyGroup>
+
+  <ItemGroup>
+    <ApplicationIcon Include="app.ico"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="app.ico"/>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.11" />

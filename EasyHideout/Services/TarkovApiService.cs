@@ -259,13 +259,13 @@ public class TarkovApiService
 
             progress?.Report($"Received {stations.Count} stations. Saving to database...");
 
-            await SnapshotPricesAsync();
-            await UpsertStationsAsync(stations, progress, logPath);
+            SnapshotPrices();
+            UpsertStations(stations, progress, logPath);
 
             if (traders != null && traders.Count > 0)
             {
                 progress?.Report("Saving trader loyalty level data...");
-                await UpsertTraderLoyaltyLevelsAsync(traders);
+                UpsertTraderLoyaltyLevels(traders);
                 AppendLog(logPath, $"Upserted {traders.Count} traders.");
             }
 
@@ -297,7 +297,7 @@ public class TarkovApiService
         try
         {
             progress?.Report("Snapshotting current prices...");
-            await SnapshotPricesAsync();
+            SnapshotPrices();
 
             List<string> itemIds;
             using (var db = ServiceLocator.Get<AppDbContext>())
@@ -364,7 +364,7 @@ public class TarkovApiService
         }
     }
 
-    private static async Task SnapshotPricesAsync()
+    private static void SnapshotPrices()
     {
         using var db = ServiceLocator.Get<AppDbContext>();
         var now = DateTime.UtcNow;
@@ -395,10 +395,9 @@ public class TarkovApiService
         }
 
         db.SaveChanges();
-        await Task.CompletedTask;
     }
 
-    private static async Task UpsertStationsAsync(
+    private static void UpsertStations(
         List<ApiStation> stations, IProgress<string>? progress, string logPath)
     {
         using var db = ServiceLocator.Get<AppDbContext>();
@@ -515,7 +514,7 @@ public class TarkovApiService
         AppendLog(logPath, $"Upserted {stations.Count} stations to database.");
     }
 
-    private static async Task UpsertTraderLoyaltyLevelsAsync(List<ApiTrader> traders)
+    private static void UpsertTraderLoyaltyLevels(List<ApiTrader> traders)
     {
         using var db = ServiceLocator.Get<AppDbContext>();
 
@@ -536,8 +535,6 @@ public class TarkovApiService
             }
         }
         db.SaveChanges();
-
-        await Task.CompletedTask;
     }
 
     private static async Task CacheIconsAsync(

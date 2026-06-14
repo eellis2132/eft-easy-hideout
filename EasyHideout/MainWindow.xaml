@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="clr-namespace:EasyHideout.ViewModels"
         xmlns:views="clr-namespace:EasyHideout.Views"
-        Title="Easy Hideout" Height="780" Width="1200" MinHeight="600" MinWidth="900"
+        Title="Easy Hideout" Icon="app.ico" Height="780" Width="1200" MinHeight="600" MinWidth="900"
         WindowStyle="None" ResizeMode="CanResize"
         WindowStartupLocation="Manual"
         Background="{DynamicResource BgSurfaceBrush}"
@@ -106,7 +106,7 @@
         <!-- Main area -->
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="160"/>
+                <ColumnDefinition Width="180"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
@@ -114,28 +114,71 @@
             <Border Grid.Column="0" Background="{DynamicResource SidebarBrush}"
                     BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,1,0">
                 <StackPanel>
-                    <Button Content="Priority" Margin="0,8,0,0"
+                    <Button Margin="0,8,0,0"
                             Style="{Binding IsPriorityActive, Converter={StaticResource BoolToNavStyleConverter}}"
-                            Command="{Binding NavPriorityCommand}"/>
-                    <Button Content="Stations"
-                            Style="{Binding IsActiveNodesActive, Converter={StaticResource BoolToNavStyleConverter}}"
-                            Command="{Binding NavActiveNodesCommand}"/>
-                    <Button Content="Item Pool"
-                            Style="{Binding IsTotalItemPoolActive, Converter={StaticResource BoolToNavStyleConverter}}"
-                            Command="{Binding NavTotalItemPoolCommand}"/>
-                    <Button Content="Wishlist"
-                            Style="{Binding IsWishlistActive, Converter={StaticResource BoolToNavStyleConverter}}"
-                            Command="{Binding NavWishlistCommand}"/>
-                    <Button Content="Focus Station"
-                            Style="{Binding IsFocusNodeActive, Converter={StaticResource BoolToNavStyleConverter}}"
-                            Command="{Binding NavFocusNodeCommand}"/>
-                    <Button Content="Shopping"
-                            Style="{Binding IsShoppingActive, Converter={StaticResource BoolToNavStyleConverter}}"
-                            Command="{Binding NavShoppingCommand}"/>
+                            Command="{Binding NavPriorityCommand}">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Text="★" Width="18" FontSize="11" TextAlignment="Center" VerticalAlignment="Center"
+                                       Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
+                            <TextBlock Text="Priority" FontSize="13" VerticalAlignment="Center"
+                                       Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{Binding IsFocusNodeActive, Converter={StaticResource BoolToNavStyleConverter}}"
+                            Command="{Binding NavFocusNodeCommand}">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Text="◎" Width="18" FontSize="11" TextAlignment="Center" VerticalAlignment="Center"
+                                       Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
+                            <TextBlock Text="Focus Station" FontSize="13" VerticalAlignment="Center"
+                                       Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{Binding IsActiveNodesActive, Converter={StaticResource BoolToNavStyleConverter}}"
+                            Command="{Binding NavActiveNodesCommand}">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Text="≡" Width="18" FontSize="14" TextAlignment="Center" VerticalAlignment="Center"
+                                       Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
+                            <TextBlock Text="Stations" FontSize="13" VerticalAlignment="Center"
+                                       Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{Binding IsTotalItemPoolActive, Converter={StaticResource BoolToNavStyleConverter}}"
+                            Command="{Binding NavTotalItemPoolCommand}">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Text="☰" Width="18" FontSize="11" TextAlignment="Center" VerticalAlignment="Center"
+                                       Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
+                            <TextBlock Text="Item Pool" FontSize="13" VerticalAlignment="Center"
+                                       Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{Binding IsShoppingActive, Converter={StaticResource BoolToNavStyleConverter}}"
+                            Command="{Binding NavShoppingCommand}">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Text="✓" Width="18" FontSize="12" TextAlignment="Center" VerticalAlignment="Center"
+                                       Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
+                            <TextBlock Text="Shopping" FontSize="13" VerticalAlignment="Center"
+                                       Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{Binding IsWishlistActive, Converter={StaticResource BoolToNavStyleConverter}}"
+                            Command="{Binding NavWishlistCommand}">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Text="♥" Width="18" FontSize="11" TextAlignment="Center" VerticalAlignment="Center"
+                                       Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
+                            <TextBlock Text="Wishlist" FontSize="13" VerticalAlignment="Center"
+                                       Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
+                        </StackPanel>
+                    </Button>
                     <Separator Margin="12,12"/>
-                    <Button Content="Settings"
-                            Style="{Binding IsSettingsActive, Converter={StaticResource BoolToNavStyleConverter}}"
-                            Command="{Binding NavSettingsCommand}"/>
+                    <Button Style="{Binding IsSettingsActive, Converter={StaticResource BoolToNavStyleConverter}}"
+                            Command="{Binding NavSettingsCommand}">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Text="⚙" Width="18" FontSize="11" TextAlignment="Center" VerticalAlignment="Center"
+                                       Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
+                            <TextBlock Text="Settings" FontSize="13" VerticalAlignment="Center"
+                                       Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
+                        </StackPanel>
+                    </Button>
                 </StackPanel>
             </Border>
 
@@ -143,18 +186,18 @@
             <Grid Grid.Column="1">
                 <views:PriorityView
                     Visibility="{Binding DataContext.IsPriorityActive, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                <views:FocusNodeView
+                    Visibility="{Binding DataContext.IsFocusNodeActive, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BoolToVisibilityConverter}}"/>
                 <views:ActiveNodesView
                     Visibility="{Binding DataContext.IsActiveNodesActive, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BoolToVisibilityConverter}}"/>
                 <views:TotalItemPoolView
                     Visibility="{Binding DataContext.IsTotalItemPoolActive, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                <views:WishlistView
-                    Visibility="{Binding DataContext.IsWishlistActive, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                <views:FocusNodeView
-                    Visibility="{Binding DataContext.IsFocusNodeActive, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                <views:IgnoredItemsView
-                    Visibility="{Binding DataContext.IsIgnoredItemsActive, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BoolToVisibilityConverter}}"/>
                 <views:ShoppingView
                     Visibility="{Binding DataContext.IsShoppingActive, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                <views:WishlistView
+                    Visibility="{Binding DataContext.IsWishlistActive, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                <views:IgnoredItemsView
+                    Visibility="{Binding DataContext.IsIgnoredItemsActive, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BoolToVisibilityConverter}}"/>
                 <views:SettingsView x:Name="SettingsViewControl"
                     Visibility="{Binding DataContext.IsSettingsActive, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BoolToVisibilityConverter}}"/>
             </Grid>
@@ -163,8 +206,12 @@
         <!-- Tooltip bar -->
         <Border Grid.Row="2" Background="{DynamicResource BgDeepBrush}"
                 BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,1,0,0">
-            <TextBlock Text="{Binding Tooltip.CurrentMessage}" Foreground="{DynamicResource TextMutedBrush}"
-                       VerticalAlignment="Center" Margin="16,0" FontSize="11"/>
+            <Grid Margin="16,0">
+                <TextBlock Text="{Binding Tooltip.CurrentMessage}" Foreground="{DynamicResource TextMutedBrush}"
+                           VerticalAlignment="Center" FontSize="11" HorizontalAlignment="Left"/>
+                <TextBlock Text="{Binding VersionDisplay}" Foreground="{DynamicResource TextMutedBrush}"
+                           VerticalAlignment="Center" FontSize="11" HorizontalAlignment="Right"/>
+            </Grid>
         </Border>
     </Grid>
 </Window>

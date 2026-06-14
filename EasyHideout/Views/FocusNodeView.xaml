@@ -47,9 +47,7 @@
                               Width="80" FontSize="12" Padding="6,4">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
-                                <TextBlock>
-                                    <Run Text="Level "/><Run Text="{Binding}"/>
-                                </TextBlock>
+                                <TextBlock Text="{Binding StringFormat='Level {0}'}"/>
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
                     </ComboBox>
@@ -153,8 +151,17 @@
                 </Border>
 
                 <!-- Items list -->
-                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto"
-                              Visibility="{Binding FarmingItems.Count, Converter={StaticResource CountToVisibilityConverter}}">
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                    <ScrollViewer.Style>
+                        <Style TargetType="ScrollViewer">
+                            <Setter Property="Visibility" Value="Visible"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding FarmingItems.Count}" Value="0">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ScrollViewer.Style>
                     <ItemsControl ItemsSource="{Binding FarmingItems}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>

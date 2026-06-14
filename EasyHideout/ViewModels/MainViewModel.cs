@@ -57,6 +57,8 @@ public class MainViewModel : INotifyPropertyChanged
         private set { _updateAvailable = value; OnPropertyChanged(); }
     }
 
+    public string VersionDisplay => $"v{AppVersion.Current}";
+
     public bool IsPriorityActive => CurrentView == AppView.Priority;
     public bool IsActiveNodesActive => CurrentView == AppView.ActiveNodes;
     public bool IsTotalItemPoolActive => CurrentView == AppView.TotalItemPool;

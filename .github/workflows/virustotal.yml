@@ -1,0 +1,59 @@
+name: VirusTotal Scan
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: 'Release tag (e.g. v1.0.0)'
+        required: true
+        default: 'v1.0.0'
+
+permissions:
+  contents: write
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download release .exe
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release download "${{ github.event.release.tag_name || inputs.tag_name }}" \
+            --repo "${{ github.repository }}" \
+            --pattern "*.exe" \
+            --dir ./release
+          EXE=$(ls ./release/*.exe | head -1)
+          echo "EXE_PATH=$EXE" >> $GITHUB_ENV
+          SHA256=$(sha256sum "$EXE" | awk '{print $1}')
+          echo "SHA256=$SHA256" >> $GITHUB_ENV
+
+      - name: Get large file upload URL
+        run: |
+          UPLOAD_URL=$(curl --silent --request GET \
+            --url https://www.virustotal.com/api/v3/files/upload_url \
+            --header "x-apikey: ${{ secrets.VIRUSTOTAL_API_KEY }}" \
+            | python3 -c "import sys,json; print(json.load(sys.stdin)['data'])")
+          echo "UPLOAD_URL=$UPLOAD_URL" >> $GITHUB_ENV
+
+      - name: Upload to VirusTotal
+        run: |
+          curl --silent --request POST \
+            --url "${{ env.UPLOAD_URL }}" \
+            --header "x-apikey: ${{ secrets.VIRUSTOTAL_API_KEY }}" \
+            --form "file=@${{ env.EXE_PATH }}" > /dev/null
+          echo "VT_URL=https://www.virustotal.com/gui/file/${{ env.SHA256 }}" >> $GITHUB_ENV
+
+      - name: Add VirusTotal link to release notes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          CURRENT_BODY=$(gh release view "${{ github.event.release.tag_name || inputs.tag_name }}" \
+            --repo "${{ github.repository }}" \
+            --json body --jq .body)
+          NEW_BODY=$(printf '%s\n\n---\n🛡️ **VirusTotal Scan:** %s' "$CURRENT_BODY" "${{ env.VT_URL }}")
+          gh release edit "${{ github.event.release.tag_name || inputs.tag_name }}" \
+            --repo "${{ github.repository }}" \
+            --notes "$NEW_BODY"

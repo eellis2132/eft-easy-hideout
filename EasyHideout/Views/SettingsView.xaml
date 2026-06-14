@@ -1,0 +1,286 @@
+<UserControl x:Class="EasyHideout.Views.SettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="32,24" MaxWidth="720">
+
+            <!-- ═══ GAME DATA ═══ -->
+            <TextBlock Text="Game Data" FontSize="16" FontWeight="SemiBold"
+                       Foreground="{DynamicResource AccentBrush}" Margin="0,0,0,12"/>
+
+            <Border Background="{DynamicResource BgElevatedBrush}"
+                    BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1"
+                    CornerRadius="4" Padding="16" Margin="0,0,0,8">
+                <StackPanel>
+                    <TextBlock Text="Pull Hideout Data" FontWeight="SemiBold" Margin="0,0,0,6"/>
+                    <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource TextSecondaryBrush}" FontSize="12"
+                               Text="Downloads station data, level requirements, and item data from tarkov.dev. Your progress will not be affected."
+                               Margin="0,0,0,12"/>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="Pull Hideout Data" Style="{DynamicResource AccentButton}"
+                                Command="{Binding PullDataCommand}" Margin="0,0,8,0"
+                                IsEnabled="{Binding IsApiRunning, Converter={StaticResource InverseBoolConverter}}"/>
+                        <Button Content="View Error Log" Command="{Binding ViewErrorLogCommand}"
+                                Padding="10,6" Margin="0,0,8,0"/>
+                        <Button Content="Export Debug Info" Command="{Binding ExportDebugCommand}"
+                                Padding="10,6"/>
+                    </StackPanel>
+                    <TextBlock Text="{Binding ApiStatus}" Foreground="{DynamicResource TextSecondaryBrush}"
+                               FontSize="12" Margin="0,10,0,0"
+                               Visibility="{Binding ApiStatus, Converter={StaticResource StringToVisibilityConverter}}"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
+                        <TextBlock Text="Last synced: " Foreground="{DynamicResource TextMutedBrush}" FontSize="12"/>
+                        <TextBlock Text="{Binding LastSynced}" Foreground="{DynamicResource TextSecondaryBrush}" FontSize="12"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <Border Background="{DynamicResource BgElevatedBrush}"
+                    BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1"
+                    CornerRadius="4" Padding="16" Margin="0,0,0,8">
+                <StackPanel>
+                    <TextBlock Text="Refresh Prices" FontWeight="SemiBold" Margin="0,0,0,6"/>
+                    <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource TextSecondaryBrush}" FontSize="12"
+                               Text="Updates flea market prices only — faster than a full data pull. Run this after a wipe or when prices have shifted."
+                               Margin="0,0,0,12"/>
+                    <Button Content="Refresh Prices" Padding="10,6" HorizontalAlignment="Left"
+                            Command="{Binding PullPricesCommand}"
+                            IsEnabled="{Binding IsApiRunning, Converter={StaticResource InverseBoolConverter}}"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Auto-Refresh settings inline in Game Data card -->
+            <Border Background="{DynamicResource BgElevatedBrush}"
+                    BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1"
+                    CornerRadius="4" Padding="16" Margin="0,0,0,8">
+                <StackPanel>
+                    <TextBlock Text="Auto-Refresh" FontWeight="SemiBold" Margin="0,0,0,6"/>
+                    <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource TextSecondaryBrush}" FontSize="12"
+                               Text="Automatically pull updated data while the app is running. The API is never called more than once every 30 minutes."
+                               Margin="0,0,0,12"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                        <Button Content="Manual" Padding="10,5" Margin="0,0,8,0"
+                                Command="{Binding SetRefreshModeManualCommand}"
+                                Style="{Binding IsManualRefresh, Converter={StaticResource BoolToNavStyleConverter}}"/>
+                        <Button Content="Auto" Padding="10,5"
+                                Command="{Binding SetRefreshModeAutoCommand}"
+                                Style="{Binding IsAutoRefresh, Converter={StaticResource BoolToNavStyleConverter}}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock Text="Interval: " FontSize="12" Foreground="{DynamicResource TextMutedBrush}"
+                                   VerticalAlignment="Center"/>
+                        <ComboBox ItemsSource="{Binding RefreshIntervalOptions}"
+                                  SelectedItem="{Binding ApiRefreshIntervalMinutes}"
+                                  Width="90" FontSize="12" Padding="6,3"
+                                  IsEnabled="{Binding IsAutoRefresh}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock>
+                                        <Run Text="{Binding Mode=OneWay}"/><Run Text=" min"/>
+                                    </TextBlock>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <Separator/>
+
+            <!-- ═══ APP PREFERENCES ═══ -->
+            <TextBlock Text="App Preferences" FontSize="16" FontWeight="SemiBold"
+                       Foreground="{DynamicResource AccentBrush}" Margin="0,0,0,12"/>
+
+            <Border Background="{DynamicResource BgElevatedBrush}"
+                    BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1"
+                    CornerRadius="4" Padding="16" Margin="0,0,0,8">
+                <StackPanel>
+                    <!-- Theme toggle -->
+                    <TextBlock Text="UI Theme" FontWeight="SemiBold" Margin="0,0,0,8"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                        <Button Content="🌙 Dark" Padding="10,6" Margin="0,0,8,0"
+                                Command="{Binding SetDarkThemeCommand}"
+                                Style="{DynamicResource AccentButton}"
+                                Opacity="{Binding IsDarkTheme, Converter={StaticResource BoolToOpacityConverter}}"/>
+                        <Button Content="☀ Light" Padding="10,6"
+                                Command="{Binding SetLightThemeCommand}"
+                                Style="{DynamicResource AccentButton}"
+                                Opacity="{Binding IsLightTheme, Converter={StaticResource BoolToOpacityConverter}}"/>
+                    </StackPanel>
+                    <Separator Margin="0,0,0,12"/>
+
+                    <TextBlock Text="Detail Panel Position" FontWeight="SemiBold" Margin="0,0,0,8"/>
+                    <TextBlock Text="Controls where the detail panel appears in Active Nodes view."
+                               Foreground="{DynamicResource TextSecondaryBrush}" FontSize="12" Margin="0,0,0,12"/>
+                    <StackPanel Orientation="Horizontal">
+                        <RadioButton Content="Left" GroupName="DPPos" Margin="0,0,16,0"
+                                     IsChecked="{Binding SelectedDetailPanelPosition, Converter={StaticResource StringEqualConverter}, ConverterParameter=left}"/>
+                        <RadioButton Content="Right" GroupName="DPPos" Margin="0,0,16,0"
+                                     IsChecked="{Binding SelectedDetailPanelPosition, Converter={StaticResource StringEqualConverter}, ConverterParameter=right}"/>
+                        <RadioButton Content="Top" GroupName="DPPos" Margin="0,0,16,0"
+                                     IsChecked="{Binding SelectedDetailPanelPosition, Converter={StaticResource StringEqualConverter}, ConverterParameter=top}"/>
+                        <RadioButton Content="Bottom" GroupName="DPPos"
+                                     IsChecked="{Binding SelectedDetailPanelPosition, Converter={StaticResource StringEqualConverter}, ConverterParameter=bottom}"/>
+                    </StackPanel>
+
+                    <Separator Margin="0,16,0,12"/>
+
+                    <TextBlock Text="Item Name Display" FontWeight="SemiBold" Margin="0,0,0,8"/>
+                    <TextBlock Text="Controls how item names appear in Priority, Item Pool, and Active Nodes."
+                               Foreground="{DynamicResource TextSecondaryBrush}" FontSize="12" Margin="0,0,0,12"/>
+                    <StackPanel Orientation="Horizontal">
+                        <RadioButton Content="Both  ([Short] Long)" GroupName="NameFmt" Margin="0,0,20,0"
+                                     IsChecked="{Binding ItemNameDisplay, Converter={StaticResource StringEqualConverter}, ConverterParameter=Both}"/>
+                        <RadioButton Content="Short only" GroupName="NameFmt" Margin="0,0,20,0"
+                                     IsChecked="{Binding ItemNameDisplay, Converter={StaticResource StringEqualConverter}, ConverterParameter=Short}"/>
+                        <RadioButton Content="Long only" GroupName="NameFmt"
+                                     IsChecked="{Binding ItemNameDisplay, Converter={StaticResource StringEqualConverter}, ConverterParameter=Long}"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <Separator/>
+
+            <!-- ═══ PROFILE MANAGEMENT ═══ -->
+            <TextBlock x:Name="ProfileManagementSection" Text="Profile Management" FontSize="16" FontWeight="SemiBold"
+                       Foreground="{DynamicResource AccentBrush}" Margin="0,0,0,12"/>
+
+            <Border Background="{DynamicResource BgElevatedBrush}"
+                    BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1"
+                    CornerRadius="4" Padding="16" Margin="0,0,0,8">
+                <StackPanel>
+                    <!-- Profile list -->
+                    <ItemsControl ItemsSource="{Binding Profiles}" Margin="0,0,0,16">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Padding="10,8" Margin="0,0,0,4"
+                                        Background="{DynamicResource BgCardBrush}" CornerRadius="3">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <!-- View mode -->
+                                        <StackPanel Grid.Column="0" Orientation="Vertical" VerticalAlignment="Center"
+                                                    Visibility="{Binding IsNotEditing, Converter={StaticResource BoolToVisibilityConverter}}">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="★ " Foreground="{DynamicResource AccentBrush}"
+                                                           Visibility="{Binding IsActive, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                                <TextBlock Text="{Binding Name}" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                                <TextBlock Text=" (active)" Foreground="{DynamicResource TextMutedBrush}" FontSize="11"
+                                                           Visibility="{Binding IsActive, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Margin="0,3,0,0">
+                                                <TextBlock Text="Edition: " FontSize="11"
+                                                           Foreground="{DynamicResource TextMutedBrush}"
+                                                           VerticalAlignment="Center"/>
+                                                <ComboBox ItemsSource="{Binding DataContext.AllEditions, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                          SelectedItem="{Binding Edition}"
+                                                          Width="150" FontSize="11" Padding="5,2"
+                                                          VerticalAlignment="Center">
+                                                    <ComboBox.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock Text="{Binding}"/>
+                                                        </DataTemplate>
+                                                    </ComboBox.ItemTemplate>
+                                                </ComboBox>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Margin="0,3,0,0">
+                                                <TextBlock Text="PMC Level: " FontSize="11"
+                                                           Foreground="{DynamicResource TextMutedBrush}"
+                                                           VerticalAlignment="Center"/>
+                                                <Button Content="−" Command="{Binding DecrementCharacterLevelCommand}"
+                                                        Padding="6,2" FontSize="12" VerticalAlignment="Center" Margin="0,0,4,0"/>
+                                                <TextBlock Text="{Binding CharacterLevel}" FontSize="12" FontWeight="SemiBold"
+                                                           VerticalAlignment="Center" Margin="0,0,4,0" MinWidth="24"
+                                                           TextAlignment="Center"/>
+                                                <Button Content="+" Command="{Binding IncrementCharacterLevelCommand}"
+                                                        Padding="6,2" FontSize="12" VerticalAlignment="Center"/>
+                                            </StackPanel>
+                                        </StackPanel>
+
+                                        <!-- Edit mode -->
+                                        <TextBox Grid.Column="0" Text="{Binding EditName, UpdateSourceTrigger=PropertyChanged}"
+                                                 Visibility="{Binding IsEditing, Converter={StaticResource BoolToVisibilityConverter}}"
+                                                 VerticalAlignment="Center" MaxWidth="200" HorizontalAlignment="Left"/>
+
+                                        <!-- Buttons -->
+                                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                            <!-- View mode buttons -->
+                                            <Button Content="Switch" Padding="8,4" Margin="0,0,4,0" FontSize="12"
+                                                    Command="{Binding DataContext.SwitchProfileCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                    CommandParameter="{Binding}"
+                                                    Visibility="{Binding IsNotEditing, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                            <Button Content="Rename" Padding="8,4" Margin="0,0,4,0" FontSize="12"
+                                                    Command="{Binding DataContext.StartRenameCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                    CommandParameter="{Binding}"
+                                                    Visibility="{Binding IsNotEditing, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                            <Button Content="Delete" Padding="8,4" FontSize="12"
+                                                    Style="{DynamicResource DangerButton}"
+                                                    Command="{Binding DataContext.DeleteProfileCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                    CommandParameter="{Binding}"
+                                                    Visibility="{Binding IsNotEditing, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                            <!-- Edit mode buttons -->
+                                            <Button Content="Save" Padding="8,4" Margin="0,0,4,0" FontSize="12"
+                                                    Style="{DynamicResource AccentButton}"
+                                                    Command="{Binding DataContext.ConfirmRenameCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                    CommandParameter="{Binding}"
+                                                    Visibility="{Binding IsEditing, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                            <Button Content="Cancel" Padding="8,4" FontSize="12"
+                                                    Command="{Binding DataContext.CancelRenameCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                    CommandParameter="{Binding}"
+                                                    Visibility="{Binding IsEditing, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <!-- Create new profile -->
+                    <TextBlock Text="Create New Profile" FontWeight="SemiBold" Margin="0,0,0,8"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                        <TextBox Text="{Binding NewProfileName, UpdateSourceTrigger=PropertyChanged}"
+                                 Width="180" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                        <ComboBox ItemsSource="{Binding AllEditions}"
+                                  SelectedItem="{Binding NewProfileEdition}"
+                                  Width="150" Margin="0,0,8,0" VerticalAlignment="Center">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                        <Button Content="Create" Style="{DynamicResource AccentButton}"
+                                Command="{Binding CreateProfileCommand}" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <TextBlock FontSize="11" Foreground="{DynamicResource TextMutedBrush}"
+                               Text="Edition sets your starting Stash level (e.g. Unheard/EoD starts at Level 4)."
+                               Margin="0,0,0,0"/>
+                </StackPanel>
+            </Border>
+
+            <Separator/>
+
+            <!-- ═══ DANGER ZONE ═══ -->
+            <TextBlock Text="Danger Zone" FontSize="16" FontWeight="SemiBold"
+                       Foreground="{DynamicResource RedBrush}" Margin="0,0,0,12"/>
+
+            <Border Background="#1A1A0A0A"
+                    BorderBrush="{DynamicResource RedBrush}" BorderThickness="1"
+                    CornerRadius="4" Padding="16" Margin="0,0,0,32">
+                <StackPanel>
+                    <TextBlock Text="Reset Progress" FontWeight="SemiBold" Margin="0,0,0,6"/>
+                    <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource TextSecondaryBrush}" FontSize="12"
+                               Text="Resets all node levels and item counts for the active profile only. Does not affect other profiles or game data."
+                               Margin="0,0,0,12"/>
+                    <Button Content="Reset Progress" Style="{DynamicResource DangerButton}"
+                            Command="{Binding ResetProgressCommand}" HorizontalAlignment="Left"
+                            Padding="12,6"/>
+                </StackPanel>
+            </Border>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

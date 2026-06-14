@@ -1,0 +1,233 @@
+<UserControl x:Class="EasyHideout.Views.ShoppingView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:EasyHideout.ViewModels">
+
+    <UserControl.DataContext>
+        <vm:ShoppingViewModel/>
+    </UserControl.DataContext>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- ═══ Header ═══ -->
+        <Border Grid.Row="0" Padding="16,10"
+                BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,0,1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="Shopping" FontSize="16" FontWeight="SemiBold"
+                               Foreground="{DynamicResource AccentBrush}" VerticalAlignment="Center"/>
+                    <TextBlock FontSize="12" Foreground="{DynamicResource TextMutedBrush}"
+                               VerticalAlignment="Center" Margin="12,0,0,0"
+                               Visibility="{Binding HasItems, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <Run Text="Total: "/>
+                        <Run Text="{Binding GrandTotalText, Mode=OneWay}" Foreground="{DynamicResource AccentBrush}"/>
+                    </TextBlock>
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <Button Content="List" Padding="10,5" Margin="0,0,6,0"
+                            Command="{Binding ShowListCommand}"
+                            Style="{Binding ShowFlat, Converter={StaticResource BoolToNavStyleConverter}}"
+                            Visibility="{Binding HasItems, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                    <Button Content="By Station" Padding="10,5" Margin="0,0,8,0"
+                            Command="{Binding ShowByStationCommand}"
+                            Style="{Binding ShowByStation, Converter={StaticResource BoolToNavStyleConverter}}"
+                            Visibility="{Binding HasItems, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                    <Button Content="Refresh" Padding="10,5" Command="{Binding RefreshCommand}"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- ═══ Column headers (flat list only) ═══ -->
+        <Border Grid.Row="1" Background="{DynamicResource BgDeepBrush}" Padding="12,5"
+                BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,0,1"
+                Visibility="{Binding ShowFlat, Converter={StaticResource BoolToVisibilityConverter}}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="36"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="60"/>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="100"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="1" Text="ITEM" FontSize="11" FontWeight="SemiBold"
+                           Foreground="{DynamicResource TextMutedBrush}"/>
+                <TextBlock Grid.Column="2" Text="NEED" FontSize="11" FontWeight="SemiBold"
+                           Foreground="{DynamicResource TextMutedBrush}" HorizontalAlignment="Center"/>
+                <TextBlock Grid.Column="3" Text="UNIT PRICE" FontSize="11" FontWeight="SemiBold"
+                           Foreground="{DynamicResource TextMutedBrush}" HorizontalAlignment="Center"/>
+                <TextBlock Grid.Column="4" Text="TOTAL" FontSize="11" FontWeight="SemiBold"
+                           Foreground="{DynamicResource TextMutedBrush}" HorizontalAlignment="Right"/>
+            </Grid>
+        </Border>
+
+        <!-- ═══ Content ═══ -->
+        <Grid Grid.Row="2">
+
+            <!-- Empty / locked state -->
+            <TextBlock Visibility="{Binding IsEmpty, Converter={StaticResource BoolToVisibilityConverter}}"
+                       Text="{Binding EmptyMessage}"
+                       HorizontalAlignment="Center" VerticalAlignment="Center"
+                       Foreground="{DynamicResource TextMutedBrush}" FontSize="14"/>
+
+            <!-- Flat list -->
+            <ScrollViewer Visibility="{Binding ShowFlat, Converter={StaticResource BoolToVisibilityConverter}}"
+                          VerticalScrollBarVisibility="Auto">
+                <ItemsControl ItemsSource="{Binding FlatItems}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Margin="0,1,0,0" Padding="12,6">
+                                <Border.Style>
+                                    <Style TargetType="Border">
+                                        <Setter Property="Background" Value="{DynamicResource BgCardBrush}"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsFleaLocked}" Value="True">
+                                                <Setter Property="Background" Value="#0A0A14"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Border.Style>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="36"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="60"/>
+                                        <ColumnDefinition Width="100"/>
+                                        <ColumnDefinition Width="100"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Border Grid.Column="0" Width="28" Height="28"
+                                            Background="{DynamicResource BgElevatedBrush}"
+                                            CornerRadius="3" VerticalAlignment="Center">
+                                        <Image Width="26" Height="26"
+                                               Source="{Binding IconPath, Converter={StaticResource FilePathToImageConverter}}"
+                                               RenderOptions.BitmapScalingMode="HighQuality"
+                                               VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    </Border>
+
+                                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="6,0,8,0">
+                                        <Border Background="#334" CornerRadius="2" Padding="3,1" Margin="0,0,5,0"
+                                                Visibility="{Binding IsFleaLocked, Converter={StaticResource BoolToVisibilityConverter}}">
+                                            <TextBlock FontSize="9" FontWeight="Bold" Foreground="#8899CC">
+                                                <Run Text="🔒 lv"/><Run Text="{Binding MinLevelForFlea, Mode=OneWay}"/>
+                                            </TextBlock>
+                                        </Border>
+                                        <Border Background="#0D2B0D" CornerRadius="2" Padding="3,1" Margin="0,0,5,0"
+                                                Visibility="{Binding HasPriceDrop, Converter={StaticResource BoolToVisibilityConverter}}">
+                                            <TextBlock Text="{Binding PriceDropText}" FontSize="9" FontWeight="Bold" Foreground="#4CAF50"/>
+                                        </Border>
+                                        <TextBlock Text="{Binding DisplayName}" VerticalAlignment="Center"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                    </StackPanel>
+
+                                    <TextBlock Grid.Column="2" Text="{Binding QuantityNeeded}"
+                                               HorizontalAlignment="Center" VerticalAlignment="Center"
+                                               Foreground="{DynamicResource TextSecondaryBrush}"/>
+
+                                    <TextBlock Grid.Column="3" Text="{Binding UnitPriceText}"
+                                               HorizontalAlignment="Center" VerticalAlignment="Center"
+                                               Foreground="{DynamicResource TextSecondaryBrush}"/>
+
+                                    <TextBlock Grid.Column="4" Text="{Binding TotalPriceText}"
+                                               HorizontalAlignment="Right" VerticalAlignment="Center"
+                                               FontWeight="SemiBold"
+                                               Foreground="{DynamicResource AccentBrush}"/>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+
+            <!-- By Station view -->
+            <ScrollViewer Visibility="{Binding ShowByStation, Converter={StaticResource BoolToVisibilityConverter}}"
+                          VerticalScrollBarVisibility="Auto">
+                <ItemsControl ItemsSource="{Binding StationGroups}" Margin="0,4">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Margin="12,4,12,0" CornerRadius="4"
+                                    Background="{DynamicResource BgElevatedBrush}"
+                                    BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1">
+                                <!-- Station header -->
+                                <StackPanel>
+                                    <Border Padding="12,8" Background="{DynamicResource BgDeepBrush}"
+                                            CornerRadius="4,4,0,0">
+                                        <Grid>
+                                            <TextBlock Text="{Binding GroupLabel}" FontWeight="SemiBold"
+                                                       FontSize="13" Foreground="{DynamicResource AccentBrush}"/>
+                                            <TextBlock Text="{Binding TotalCostText}" HorizontalAlignment="Right"
+                                                       FontSize="13" FontWeight="SemiBold"
+                                                       Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                        </Grid>
+                                    </Border>
+
+                                    <!-- Items -->
+                                    <ItemsControl ItemsSource="{Binding Items}" Margin="0,2,0,6">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid Margin="12,2">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="24"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="40"/>
+                                                        <ColumnDefinition Width="90"/>
+                                                        <ColumnDefinition Width="90"/>
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <Image Grid.Column="0" Width="20" Height="20"
+                                                           Source="{Binding IconPath, Converter={StaticResource FilePathToImageConverter}}"
+                                                           RenderOptions.BitmapScalingMode="HighQuality"
+                                                           VerticalAlignment="Center"/>
+
+                                                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="4,0">
+                                                        <Border Background="#334" CornerRadius="2" Padding="3,1" Margin="0,0,4,0"
+                                                                Visibility="{Binding IsFleaLocked, Converter={StaticResource BoolToVisibilityConverter}}">
+                                                            <TextBlock FontSize="8" FontWeight="Bold" Foreground="#8899CC">
+                                                                <Run Text="🔒 lv"/><Run Text="{Binding MinLevelForFlea, Mode=OneWay}"/>
+                                                            </TextBlock>
+                                                        </Border>
+                                                        <Border Background="#0D2B0D" CornerRadius="2" Padding="3,1" Margin="0,0,4,0"
+                                                                Visibility="{Binding HasPriceDrop, Converter={StaticResource BoolToVisibilityConverter}}">
+                                                            <TextBlock Text="{Binding PriceDropText}" FontSize="8" FontWeight="Bold" Foreground="#4CAF50"/>
+                                                        </Border>
+                                                        <TextBlock Text="{Binding DisplayName}" FontSize="11"
+                                                                   VerticalAlignment="Center" TextTrimming="CharacterEllipsis"
+                                                                   Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                                    </StackPanel>
+
+                                                    <TextBlock Grid.Column="2" Text="{Binding QuantityNeeded}"
+                                                               HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                               FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}"/>
+
+                                                    <TextBlock Grid.Column="3" Text="{Binding UnitPriceText}"
+                                                               HorizontalAlignment="Right" VerticalAlignment="Center"
+                                                               FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}"/>
+
+                                                    <TextBlock Grid.Column="4" Text="{Binding TotalPriceText}"
+                                                               HorizontalAlignment="Right" VerticalAlignment="Center"
+                                                               FontSize="11" FontWeight="SemiBold"
+                                                               Foreground="{DynamicResource AccentBrush}"/>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
+</UserControl>

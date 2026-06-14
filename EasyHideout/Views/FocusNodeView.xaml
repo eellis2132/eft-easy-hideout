@@ -1,0 +1,9 @@
+<UserControl x:Class="EasyHideout.Views.FocusNodeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid>
+        <TextBlock Text="Focus Node" FontSize="22" FontWeight="SemiBold"
+                   HorizontalAlignment="Center" VerticalAlignment="Center"
+                   Foreground="{DynamicResource TextMutedBrush}"/>
+    </Grid>
+</UserControl>

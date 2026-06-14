@@ -1,0 +1,16 @@
+# Build output
+DEV/
+LIVE/
+EasyHideout/bin/
+EasyHideout/obj/
+
+# Visual Studio
+.vs/
+*.user
+
+# Claude Code session data
+.claude/
+
+# Scaffolding / working files
+*.pdf
+pdf_pages/

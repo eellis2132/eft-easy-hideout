@@ -3,6 +3,12 @@ name: VirusTotal Scan
 on:
   release:
     types: [published]
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: 'Release tag (e.g. v1.0.0)'
+        required: true
+        default: 'v1.0.0'
 
 permissions:
   contents: write
@@ -15,7 +21,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release download "${{ github.event.release.tag_name }}" \
+          gh release download "${{ github.event.release.tag_name || inputs.tag_name }}" \
             --repo "${{ github.repository }}" \
             --pattern "*.exe" \
             --dir ./release
@@ -36,10 +42,10 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          CURRENT_BODY=$(gh release view "${{ github.event.release.tag_name }}" \
+          CURRENT_BODY=$(gh release view "${{ github.event.release.tag_name || inputs.tag_name }}" \
             --repo "${{ github.repository }}" \
             --json body --jq .body)
           NEW_BODY=$(printf '%s\n\n---\n🛡️ **VirusTotal Scan:** %s' "$CURRENT_BODY" "${{ env.VT_URL }}")
-          gh release edit "${{ github.event.release.tag_name }}" \
+          gh release edit "${{ github.event.release.tag_name || inputs.tag_name }}" \
             --repo "${{ github.repository }}" \
             --notes "$NEW_BODY"

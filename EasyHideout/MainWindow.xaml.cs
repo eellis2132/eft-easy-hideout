@@ -51,6 +51,13 @@ public partial class MainWindow : Window
 
     private void CloseBtn_Click(object sender, RoutedEventArgs e) => Close();
 
+    private void UpdateBadge_Click(object sender, RoutedEventArgs e) =>
+        System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+        {
+            FileName = Helpers.AppVersion.GitHubReleasesUrl,
+            UseShellExecute = true
+        });
+
     private void RestoreWindowPosition()
     {
         try

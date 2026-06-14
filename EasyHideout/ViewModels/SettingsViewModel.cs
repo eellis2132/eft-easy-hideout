@@ -187,6 +187,8 @@ public class SettingsViewModel : INotifyPropertyChanged
     public RelayCommand ExportDebugCommand { get; }
     public RelayCommand SetRefreshModeManualCommand { get; }
     public RelayCommand SetRefreshModeAutoCommand { get; }
+    public RelayCommand OpenGitHubCommand { get; }
+    public string CurrentVersion => $"v{Helpers.AppVersion.Current}";
 
     public SettingsViewModel(MainViewModel main)
     {
@@ -196,6 +198,12 @@ public class SettingsViewModel : INotifyPropertyChanged
         SetLightThemeCommand = new RelayCommand(() => ApplyTheme("light"));
         SetRefreshModeManualCommand = new RelayCommand(() => ApiRefreshMode = "Manual");
         SetRefreshModeAutoCommand = new RelayCommand(() => ApiRefreshMode = "Auto");
+        OpenGitHubCommand = new RelayCommand(() => System.Diagnostics.Process.Start(
+            new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = Helpers.AppVersion.GitHubReleasesUrl,
+                UseShellExecute = true
+            }));
 
         PullDataCommand = new RelayCommand(
             async () => await PullDataAsync(),

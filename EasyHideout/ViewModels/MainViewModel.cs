@@ -1,5 +1,7 @@
 using System.ComponentModel;
+using System.Net.Http;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
 using System.Windows.Threading;
 using EasyHideout.Data;
 using EasyHideout.Helpers;
@@ -48,6 +50,13 @@ public class MainViewModel : INotifyPropertyChanged
         set { _activeProfileId = value; OnPropertyChanged(); }
     }
 
+    private bool _updateAvailable;
+    public bool UpdateAvailable
+    {
+        get => _updateAvailable;
+        private set { _updateAvailable = value; OnPropertyChanged(); }
+    }
+
     public bool IsPriorityActive => CurrentView == AppView.Priority;
     public bool IsActiveNodesActive => CurrentView == AppView.ActiveNodes;
     public bool IsTotalItemPoolActive => CurrentView == AppView.TotalItemPool;
@@ -81,6 +90,23 @@ public class MainViewModel : INotifyPropertyChanged
 
         LoadActiveProfile();
         InitAutoRefreshTimer();
+        _ = CheckForUpdateAsync();
+    }
+
+    private static readonly HttpClient _http = new();
+
+    private async Task CheckForUpdateAsync()
+    {
+        try
+        {
+            _http.DefaultRequestHeaders.UserAgent.TryParseAdd("EasyHideout/1.0");
+            var json = await _http.GetStringAsync(AppVersion.GitHubApiLatestUrl);
+            using var doc = JsonDocument.Parse(json);
+            var tag = doc.RootElement.GetProperty("tag_name").GetString()?.TrimStart('v');
+            if (tag != null && tag != AppVersion.Current)
+                UpdateAvailable = true;
+        }
+        catch { /* non-fatal — silently skip if offline or API unavailable */ }
     }
 
     private DispatcherTimer? _autoRefreshTimer;

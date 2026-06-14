@@ -23,8 +23,11 @@
                         <Button Content="View Error Log" Command="{Binding ViewErrorLogCommand}"
                                 Padding="10,6" Margin="0,0,8,0"/>
                         <Button Content="Export Debug Info" Command="{Binding ExportDebugCommand}"
-                                Padding="10,6"/>
+                                Padding="10,6" ToolTip="Exports your hideout data and recommendations to a text file. Send this to the developer if something looks wrong with the priority lists or suggestions."/>
                     </StackPanel>
+                    <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource TextMutedBrush}" FontSize="11"
+                               Text="Export Debug Info captures your hideout state and what the app is recommending. Send the file to the developer if something looks wrong in the priority lists or upgrade suggestions."
+                               Margin="0,0,0,6"/>
                     <TextBlock Text="{Binding ApiStatus}" Foreground="{DynamicResource TextSecondaryBrush}"
                                FontSize="12" Margin="0,10,0,0"
                                Visibility="{Binding ApiStatus, Converter={StaticResource StringToVisibilityConverter}}"/>
@@ -278,6 +281,26 @@
                     <Button Content="Reset Progress" Style="{DynamicResource DangerButton}"
                             Command="{Binding ResetProgressCommand}" HorizontalAlignment="Left"
                             Padding="12,6"/>
+                </StackPanel>
+            </Border>
+
+            <Separator/>
+
+            <!-- ═══ ABOUT ═══ -->
+            <TextBlock Text="About" FontSize="16" FontWeight="SemiBold"
+                       Foreground="{DynamicResource AccentBrush}" Margin="0,0,0,12"/>
+
+            <Border Background="{DynamicResource BgElevatedBrush}"
+                    BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1"
+                    CornerRadius="4" Padding="16" Margin="0,0,0,32">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                        <TextBlock Text="Version " Foreground="{DynamicResource TextMutedBrush}" FontSize="12" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding CurrentVersion}" Foreground="{DynamicResource TextSecondaryBrush}"
+                                   FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <Button Content="View on GitHub / Download Updates" HorizontalAlignment="Left"
+                            Padding="10,6" Command="{Binding OpenGitHubCommand}"/>
                 </StackPanel>
             </Border>
 

@@ -27,6 +27,8 @@ what to buy, and what to focus on.
 
 Grab the latest release from the [Releases](../../releases) page. Single `.exe`, no installer needed — just download and run.
 
+> **Windows SmartScreen warning:** Because this app isn't code-signed, Windows may show a "Windows protected your PC" popup the first time you run it. Click **More info → Run anyway**. Every release includes a VirusTotal scan link so you can verify it yourself.
+
 ## Requirements
 
 - Windows 10 or later

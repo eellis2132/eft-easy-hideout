@@ -39,10 +39,7 @@ jobs:
           CURRENT_BODY=$(gh release view "${{ github.event.release.tag_name }}" \
             --repo "${{ github.repository }}" \
             --json body --jq .body)
-          NEW_BODY="${CURRENT_BODY}
-
----
-🛡️ **VirusTotal Scan:** ${{ env.VT_URL }}"
+          NEW_BODY=$(printf '%s\n\n---\n🛡️ **VirusTotal Scan:** %s' "$CURRENT_BODY" "${{ env.VT_URL }}")
           gh release edit "${{ github.event.release.tag_name }}" \
             --repo "${{ github.repository }}" \
             --notes "$NEW_BODY"

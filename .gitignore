@@ -1,6 +1,7 @@
 # Build output
 DEV/
 LIVE/
+publish/
 EasyHideout/bin/
 EasyHideout/obj/
 
